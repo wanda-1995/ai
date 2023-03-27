@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>ChatGPT Chatbot</title>
+</head>
+<body>
+	<h1>Welcome to ChatGPT Chatbot</h1>
+	<div id="chatbox">
+		<!-- Chat messages will be displayed here -->
+	</div>
+	<div id="inputbox">
+		<!-- User input will be entered here -->
+		<input type="text" id="userinput" />
+		<button onclick="sendRequest()">Send</button>
+	</div>
+
+	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+	<script>
+		function sendRequest() {
+			// Get user input
+			var userInput = document.getElementById("userinput").value;
+
+			// Send request to OpenAI API
+			axios.post('https://api.openai.com/v1/engine/<YOUR_ENGINE_ID>/completions', {
+			  prompt: userInput,
+			  max_tokens: 50,
+			  temperature: 0.5,
+			  n: 1,
+			  stop: '\n',
+			}, {
+			  headers: {
+			    'Content-Type': 'application/json',
+			    'Authorization': 'Bearer <YOUR_API_KEY>'
+			  }
+			})
+			.then(function (response) {
+			  // Handle API response
+			  var chatBox = document.getElementById("chatbox");
+			  var botResponse = response.data.choices[0].text;
+			  chatBox.innerHTML += "<p><strong>User:</strong> " + userInput + "</p>";
+			  chatBox.innerHTML += "<p><strong>ChatGPT:</strong> " + botResponse + "</p>";
+			})
+			.catch(function (error) {
+			  console.log(error);
+			});
+		}
+	</script>
+</body>
+</html>
